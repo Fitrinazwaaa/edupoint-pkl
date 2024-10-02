@@ -1,10 +1,9 @@
 <?php
 use App\Http\Controllers\Admin_Controller;
 use App\Http\Controllers\Koneksi_Controller;
-<<<<<<< HEAD
+
 use App\Http\Controllers\UserController;
-=======
->>>>>>> ebe9ee949bb55b0e156ea6b755a724781ac08bcf
+
 use App\Http\Controllers\user_admin_controller;
 use App\Http\Controllers\DataSiswaController;
 use App\Http\Controllers\PoinController;
@@ -32,11 +31,10 @@ Route::middleware(['auth'])->group(function () {
 // USER-ADMIN
 Route::get('/laporan_poin_siswa', [user_admin_controller::class, 'laporan1'])->name('LaporanPoinSiswa');
 
-<<<<<<< HEAD
+
 // Route::get('/akun_bk', [user_admin_controller::class, 'pengaturan_akun1'])->name('AkunBK');
-=======
+
 Route::get('/akun_bk', [user_admin_controller::class, 'pengaturan_akun1'])->name('AkunBK');
->>>>>>> ebe9ee949bb55b0e156ea6b755a724781ac08bcf
 Route::get('/akun_guru', [user_admin_controller::class, 'pengaturan_akun2'])->name('AkunGuru');
 Route::get('/akun_kesiswaan', [user_admin_controller::class, 'pengaturan_akun3'])->name('AkunKesiswaan');
 Route::get('/akun_osis', [user_admin_controller::class, 'pengaturan_akun4'])->name('AkunOsis');
@@ -66,7 +64,7 @@ Route::get('/poin/create', [PoinController::class, 'create'])->name('Tambah_Poin
 Route::post('/poin/store', [PoinController::class, 'store'])->name('submitPoin');
 
 
-<<<<<<< HEAD
+
 
 // TABEL POSITIF-NEGATIF
 Route::get('/poin/negatif', function () { return view('admin.poin.negatif'); })->name('negatif');
@@ -84,7 +82,7 @@ Route::put('/user/osis/{id}', [UserController::class, 'update'])->name('OsisUpda
 Route::get('/user/kesiswaan', [UserController::class, 'indexkesiswaan'])->name('AkunKesiswaan');
 Route::put('/user/kesiswaan/{id}', [UserController::class, 'update'])->name('KesiswaanUpdate');
 
-=======
+
 Route::get('/siswa', [DataSiswaController::class, 'index'])->name('Siswa');
 Route::get('/siswa/create', [DataSiswaController::class, 'create'])->name('TambahSiswa');
 Route::PUT('/siswa/store', [DataSiswaController::class, 'store'])->name('SiswaStore');
@@ -92,4 +90,3 @@ Route::get('/siswa/edit/{id}', [DataSiswaController::class, 'edit'])->name('Sisw
 Route::PUT('/siswa/update/{id}', [DataSiswaController::class, 'update'])->name('SiswaUpdate');
 Route::get('/siswa/hapus/{id}', [DataSiswaController::class, 'destroy'])->name('SiswaHapus');
 Route::post('/siswa/hapus-multiple', [DataSiswaController::class, 'destroyMultiple'])->name('SiswaHapusMultiple');
->>>>>>> ebe9ee949bb55b0e156ea6b755a724781ac08bcf
