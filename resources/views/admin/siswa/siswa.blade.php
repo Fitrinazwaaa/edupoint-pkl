@@ -1,243 +1,108 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta chars style="display: flex; justify-content: center; align-items: center;"et="UTF-8">
-    <meta name="view Moreport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
     <title>Daftar Siswa SMK</title>
     <link rel="stylesheet" href="{{ asset('css/admin/siswa/siswa.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    @extends('navbar/nav-utama')
+    @extends('navbar/nav-form')
+
+    <!-- Search Bar -->
+    <div class="container mt-3">
+        <div class="input-group">
+            <input type="text" class="form-control" id="searchInput" placeholder="Cari siswa berdasarkan NIS atau Nama" aria-label="Search" onkeyup="searchStudents()">
+            <button class="btn btn-outline-secondary" type="button" onclick="searchStudents()">Cari</button>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="margin-top: -20px; padding: -20px;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Konfirmasi Penghapusan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p style="font-size: 13px;">Anda yakin ingin menghapus siswa yang dipilih?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="hero">
         <div class="judul_dan_tombol">
             <div class="judul-awal">
                 <p class="judul1">TABEL SISWA SMK N 1 KAWALI</p>
                 <p class="judul2">PERIODE 2022-2024</p>
-                <p class="judul2">PERIODE 2022-FITRI NAJWA FATIMATU JAHRO</p>
             </div>
             <div class="tambah_dan_hapus">
-                <button class="icon-btn delete-btn"><i class="fas fa-trash-alt"></i></button>
+                <form id="deleteForm" action="{{ route('SiswaHapusMultiple') }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="button" class="icon-btn delete-btn" onclick="deleteSelected();"><i class="fas fa-trash-alt"></i></button>
+                </form>
                 <button class="tambah" onclick="window.location.href='{{ route('TambahSiswa') }}';">
                     <i class="fas fa-plus"></i> Tambahkan
                 </button>
             </div>
         </div>
-
-        <!-- Dropdown with CSS only -->
+        @foreach ($siswaByTahun as $tahun_angkatan => $siswa)
         <div class="tabel">
-            <input type="checkbox" id="dropdown1">
-            <label class="btn-toggle" for="dropdown1">
-                ANGKATAN TAHUN 2023 - 2024
+            <input type="checkbox" id="dropdown{{ $tahun_angkatan }}">
+            <label class="btn-toggle" for="dropdown{{ $tahun_angkatan }}">
+                ANGKATAN TAHUN {{ $tahun_angkatan }}
+                <span class="float-end" style="font-weight: 500; margin-right: 30px">Jumlah Siswa: {{ count($siswa) }}</span>
             </label>
-            <div class="collapse-content" id="content1" >
+            <div class="collapse-content" id="content{{ $tahun_angkatan }}">
                 <div class="card card-body">
                     <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>No</th>
-                                    <th>NIS</th>
-                                    <th>Nama</th>
-                                    <th>Jenis<br>Kelamin</th>
-                                    <th>Kelas</th>
-                                    <th>Angkatan (Tahun)</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="hapus[]" id="hapus" value="222310372">
-                                    </td>
-                                    <td>1</td>
-                                    <td>222310372</td>
-                                    <td class="align-left">nama perempuan 1</td>
-                                    <td>
-                                        <div class="gender-box female">P</div>
-                                    </td>
-                                    <td class="align-left">10 Rekayasa Perangkat Lunak 3</td>
-                                    <td>2023-2024</td>
-                                    <td>
-                                        <button class="icon-btn edit-btn" onclick="window.location.href='{{ route('EditSiswa') }}';"><i class="fas fa-edit"></i></button>
-                                    </td>
-                                </tr>
-                                    <td>
-                                        <input type="checkbox" name="hapus[]" id="hapus" value="222310372">
-                                    </td>
-                                    <td>2</td>
-                                    <td>222310371</td>
-                                    <td class="align-left">nama laki laki 1</td>
-                                    <td>
-                                        <div class="gender-box male">L</div>
-                                    </td>
-                                    <td class="align-left">10 Gim 1</td>
-                                    <td>2023-2024</td>
-                                    <td>
-                                        <button class="icon-btn edit-btn" onclick="window.location.href='{{ route('EditSiswa') }}';"><i class="fas fa-edit"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="hapus[]" id="hapus" value="222310372">
-                                    </td>
-                                    <td>3</td>
-                                    <td>222310370</td>
-                                    <td class="align-left">nama perempuan 2</td>
-                                    <td>
-                                        <div class="gender-box female">P</div>
-                                    </td>
-                                    <td class="align-left">10 Teknik Komputer Jaringan 3</td>
-                                    <td>2023-2024</td>
-                                    <td>
-                                        <button class="icon-btn edit-btn" onclick="window.location.href='{{ route('EditSiswa') }}';"><i class="fas fa-edit"></i></button>
-                                    </td>
-                                </tr>
-                                    <td>
-                                        <input type="checkbox" name="hapus[]" id="hapus" value="222310372">
-                                    </td>
-                                    <td>4</td>
-                                    <td>222310369</td>
-                                    <td class="align-left">nama laki laki 2</td>
-                                    <td>
-                                        <div class="gender-box male">L</div>
-                                    </td>
-                                    <td class="align-left">10 Seni Karawitan 1</td>
-                                    <td>2023-2024</td>
-                                    <td>
-                                        <button class="icon-btn edit-btn" onclick="window.location.href='{{ route('EditSiswa') }}';"><i class="fas fa-edit"></i></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>NIS</th>
+                                        <th>Nama</th>
+                                        <th>Jenis<br>Kelamin</th>
+                                        <th>Kelas</th>
+                                        <th>Angkatan (Tahun)</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentTable{{ $tahun_angkatan }}">
+                                    @foreach ($siswa as $item)
+                                    <tr>
+                                        <td><input type="checkbox" name="hapus[]" value="{{ $item->nis }}"></td>
+                                        <td>{{ $item->nis }}</td>
+                                        <td>{{ $item->nama }}</td>
+                                        <td>{{ $item->jenis_kelamin }}</td>
+                                        <td>{{ $item->kelas }}</td>
+                                        <td>{{ $item->tahun_angkatan }}</td>
+                                        <td>
+                                            <button class="icon-btn edit-btn" onclick="window.location.href='{{ route('SiswaEdit', $item->nis) }}';">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="tabel">
-            <input type="checkbox" id="dropdown2">
-            <label class="btn-toggle" for="dropdown2">
-                ANGKATAN TAHUN 2022 - 2023
-            </label>
-            <div class="collapse-content" id="content2">
-                <div class="card card-body">
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>No</th>
-                                    <th>NIS</th>
-                                    <th>Nama</th>
-                                    <th>Jenis<br>Kelamin</th>
-                                    <th>Kelas</th>
-                                    <th>Angkatan (Tahun)</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="hapus[]" id="hapus" value="222310372">
-                                    </td>
-                                    <td>1</td>
-                                    <td>222310382</td>
-                                    <td class="align-left">nama perempuan</td>
-                                    <td>
-                                        <div class="gender-box female">P</div>
-                                    </td>
-                                    <td class="align-left">11 Desain Permodelan Informasi Bangunan 2</td>
-                                    <td>2022-2023</td>
-                                    <td>
-                                        <button class="icon-btn edit-btn" onclick="window.location.href='{{ route('EditSiswa') }}';"><i class="fas fa-edit"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="hapus[]" id="hapus" value="222310372">
-                                    </td>
-                                    <td>2</td>
-                                    <td>222310381</td>
-                                    <td class="align-left">nama laki laki</td>
-                                    <td>
-                                        <div class="gender-box male">L</div>
-                                    </td>
-                                    <td class="align-left">11 Teknik Kendaraan Ringan Otomotif 3</td>
-                                    <td>2022-2023</td>
-                                    <td>
-                                        <button class="icon-btn edit-btn" onclick="window.location.href='{{ route('EditSiswa') }}';"><i class="fas fa-edit"></i></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="tabel">
-            <input type="checkbox" id="dropdown3">
-            <label class="btn-toggle" for="dropdown3">
-                ANGKATAN TAHUN 2021 - 2022
-            </label>
-            <div class="collapse-content" id="content3">
-                <div class="card card-body">
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>No</th>
-                                    <th>NIS</th>
-                                    <th>Nama</th>
-                                    <th>Jenis<br>Kelamin</th>
-                                    <th>Kelas</th>
-                                    <th>Angkatan (Tahun)</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="hapus[]" id="hapus" value="222310372">
-                                    </td>
-                                    <td>1</td>
-                                    <td>222310392</td>
-                                    <td class="align-left">nama perempuan</td>
-                                    <td>
-                                        <div class="gender-box female">P</div>
-                                    </td>
-                                    <td class="align-left">12 Akuntansi 3</td>
-                                    <td>2021-2022</td>
-                                    <td>
-                                        <button class="icon-btn edit-btn" onclick="window.location.href='{{ route('EditSiswa') }}';"><i class="fas fa-edit"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="hapus[]" id="hapus" value="222310372">
-                                    </td>
-                                    <td>2</td>
-                                    <td>222310391</td>
-                                    <td class="align-left">nama laki laki</td>
-                                    <td>
-                                        <div class="gender-box male">L</div>
-                                    </td>
-                                    <td class="align-left">12 Menejemen Perkantoran 3</td>
-                                    <td>2021-2022</td>
-                                    <td>
-                                        <button class="icon-btn edit-btn" onclick="window.location.href='{{ route('EditSiswa') }}';"><i class="fas fa-edit"></i></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @endforeach        
     </div>
+    
     <script>
         function deleteSelected() {
             const checkedBoxes = document.querySelectorAll('input[name="hapus[]"]:checked');
@@ -249,10 +114,63 @@
             const selectedValues = Array.from(checkedBoxes).map(cb => cb.value);
             console.log('Siswa yang dipilih untuk dihapus:', selectedValues);
 
-            // Kirim data untuk dihapus atau lakukan aksi lain
+            // Show modal for confirmation
+            const confirmModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+            confirmModal.show();
+
+            // Attach event listener to the delete button inside the modal
+            document.getElementById('confirmDeleteBtn').onclick = function() {
+                const deleteForm = document.getElementById('deleteForm');
+                checkedBoxes.forEach(cb => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'nis[]'; // Ensure this matches the expected array in the controller
+                    input.value = cb.value;
+                    deleteForm.appendChild(input);
+                });
+                deleteForm.submit();
+            };
         }
 
-        6
+        function searchStudents() {
+    console.log("Tombol search dipanggil");
+    const searchInput = document.getElementById('searchInput').value.toLowerCase();
+    const tables = document.querySelectorAll('.table');
+
+    tables.forEach(table => {
+        const rows = table.querySelectorAll('tbody tr');
+        let foundVisible = false; // Track if any rows are visible
+
+        rows.forEach(row => {
+            const nis = row.cells[1].innerText.toLowerCase();
+            const nama = row.cells[2].innerText.toLowerCase();
+
+            if (nis.includes(searchInput) || nama.includes(searchInput)) {
+                row.style.display = ''; // Show row
+                foundVisible = true; // At least one row is visible
+            } else {
+                row.style.display = 'none'; // Hide row
+            }
+        });
+
+        // Show or hide the entire table based on whether any rows are visible
+        if (foundVisible) {
+            table.style.display = ''; // Show the table
+        } else {
+            table.style.display = 'none'; // Hide the table
+        }
+    });
+
+    // Check if any tables are visible
+    const anyTableVisible = Array.from(tables).some(table => table.style.display !== 'none');
+    // Show all tables if at least one match was found
+    if (anyTableVisible) {
+        tables.forEach(table => table.style.display = ''); // Show all tables
+    } else {
+        tables.forEach(table => table.style.display = 'none'); // Hide all tables
+    }
+}
+
         document.querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
             checkbox.addEventListener('change', function() {
                 if (this.checked) {
@@ -264,6 +182,6 @@
             });
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
