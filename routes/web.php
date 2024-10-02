@@ -1,7 +1,7 @@
 <?php
 use App\Http\Controllers\Admin_Controller;
 use App\Http\Controllers\Koneksi_Controller;
-use App\Http\Controllers\PoinController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\user_admin_controller;
 use Illuminate\Support\Facades\Route;
 
@@ -31,10 +31,10 @@ Route::middleware(['auth'])->group(function () {
 // USER-ADMIN
 Route::get('/laporan_poin_siswa', [user_admin_controller::class, 'laporan1'])->name('LaporanPoinSiswa');
 
-Route::get('/akun_bk', [user_admin_controller::class, 'pengaturanakun1'])->name('AkunBK');
-Route::get('/akun_guru', [user_admin_controller::class, 'pengaturanakun2'])->name('AkunGuru');
-Route::get('/akun_kesiswaan', [user_admin_controller::class, 'pengaturanakun3'])->name('AkunKesiswaan');
-Route::get('/akun_osis', [user_admin_controller::class, 'pengaturanakun4'])->name('AkunOsis');
+// Route::get('/akun_bk', [user_admin_controller::class, 'pengaturan_akun1'])->name('AkunBK');
+Route::get('/akun_guru', [user_admin_controller::class, 'pengaturan_akun2'])->name('AkunGuru');
+Route::get('/akun_kesiswaan', [user_admin_controller::class, 'pengaturan_akun3'])->name('AkunKesiswaan');
+Route::get('/akun_osis', [user_admin_controller::class, 'pengaturan_akun4'])->name('AkunOsis');
 
 Route::get('/poin/positif', [user_admin_controller::class, 'poin1'])->name('Negatif');
 Route::get('/tambah_peringatan', [user_admin_controller::class, 'poin2'])->name('TambahPeringatan');
@@ -65,3 +65,16 @@ Route::get('/tambah_siswa', [user_admin_controller::class, 'siswa3'])->name('Tam
 // TABEL POSITIF-NEGATIF
 Route::get('/poin/negatif', function () { return view('admin.poin.negatif'); })->name('negatif');
 Route::get('/poin/positif', function () { return view('admin.poin.positif'); })->name('positif');
+
+Route::get('/user-bk', [UserController::class, 'indexbk'])->name('AkunBK');
+Route::put('/user-bk/{id}', [UserController::class, 'update'])->name('UserUpdate');
+
+Route::get('/user/guru', [UserController::class, 'indexguru'])->name('AkunGuru');
+Route::put('/user/guru/{id}', [UserController::class, 'update'])->name('GuruUpdate'); 
+
+Route::get('/user/osis', [UserController::class, 'indexosis'])->name('AkunOsis');
+Route::put('/user/osis/{id}', [UserController::class, 'update'])->name('OsisUpdate');
+
+Route::get('/user/kesiswaan', [UserController::class, 'indexkesiswaan'])->name('AkunKesiswaan');
+Route::put('/user/kesiswaan/{id}', [UserController::class, 'update'])->name('KesiswaanUpdate');
+
